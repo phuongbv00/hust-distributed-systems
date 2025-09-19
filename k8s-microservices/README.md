@@ -75,6 +75,7 @@ Câu hỏi 6: Sau khi chạy kubectl apply -f users-deploy.yaml, dùng lệnh n�
 quả.
 
 > kubectl get pods -l app=users -n micro-lab
+>
 > ![qa-06.png](docs/images/qa-06.png)
 
 Câu hỏi 7: Trong file users-deploy.yaml, hãy chỉ ra:
