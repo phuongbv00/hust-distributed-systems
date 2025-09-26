@@ -4,17 +4,20 @@
 #include <sys/types.h>
 #include <pthread.h>
 int shared = 10;
-void * fun(void * args){
-time_t start = time(NULL);
-time_t end = start+5; //run for 5 seconds
-YOUR-CODE-HERE
-return NULL;
+
+void *fun(void *args) {
+    const time_t start = time(NULL);
+    const time_t end = start + 5; //run for 5 seconds
+    while (time(NULL) < end) {
+        shared++;
+    }
+    return NULL;
 }
 
-int main(){
-pthread_t thread_id;
-pthread_create(&thread_id, NULL, fun, NULL);
-pthread_join(thread_id, NULL);
-printf("shared: %d\n", shared);
-return 0;
+int main() {
+    pthread_t thread_id;
+    pthread_create(&thread_id, NULL, fun, NULL);
+    pthread_join(thread_id, NULL);
+    printf("shared: %d\n", shared);
+    return 0;
 }
