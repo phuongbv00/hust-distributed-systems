@@ -9,7 +9,7 @@
 int balance = INIT_BALANCE;
 int credits = 0;
 int debits = 0;
-pthread_mutex_t b_lock, c_lock, d_lock;
+pthread_mutex_t lock;
 
 void *transactions(void *args) {
     for (int i = 0; i < NUM_TRANS; i++) {
@@ -19,20 +19,16 @@ void *transactions(void *args) {
         //randomnly choose to credit or debit
         if (rand() % 2) {
             //credit
-            pthread_mutex_lock(&b_lock);
+            pthread_mutex_lock(&lock);
             balance = balance + v;
-            pthread_mutex_unlock(&b_lock);
-            pthread_mutex_lock(&c_lock);
             credits = credits + v;
-            pthread_mutex_unlock(&c_lock);
+            pthread_mutex_unlock(&lock);
         } else {
             //debit
-            pthread_mutex_lock(&b_lock);
+            pthread_mutex_lock(&lock);
             balance = balance - v;
-            pthread_mutex_unlock(&b_lock);
-            pthread_mutex_lock(&d_lock);
             debits = debits + v;
-            pthread_mutex_unlock(&d_lock);
+            pthread_mutex_unlock(&lock);
         }
     }
     return 0;
@@ -40,9 +36,7 @@ void *transactions(void *args) {
 
 int main(int argc, char *argv[]) {
     clock_t start = clock();
-    pthread_mutex_init(&b_lock, NULL);
-    pthread_mutex_init(&c_lock, NULL);
-    pthread_mutex_init(&d_lock, NULL);
+    pthread_mutex_init(&lock, NULL);
 
     int n_threads, i;
     pthread_t *threads;
@@ -75,9 +69,7 @@ int main(int argc, char *argv[]) {
     printf("\t Balance:\t%d\n", balance);
     //free array
     free(threads);
-    pthread_mutex_destroy(&b_lock);
-    pthread_mutex_destroy(&c_lock);
-    pthread_mutex_destroy(&d_lock);
+    pthread_mutex_destroy(&lock);
     clock_t end = clock();
     printf("Execution time: %fs", (double) (end - start) / CLOCKS_PER_SEC);
     return 0;

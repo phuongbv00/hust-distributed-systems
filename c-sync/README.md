@@ -53,5 +53,11 @@ thiện gì hơn so với naive-lock?
 Câu hỏi 8: so sánh và đo đạt thời gian để chứng minh là Fine Locking sẽ nhanh
 hơn Coarse Locking.
 
+> Có vẻ không giống như lý thuyết, vì tốc độ thực thi quá nhanh, dẫn đến chênh lệch không đáng kể.
+>
+> ![coarce-locking-bank.png](docs/coarce-locking-bank.png)
+>
+> ![fine-locking-bank.png](docs/fine-locking-bank.png)
+
 Câu hỏi 9: chạy chương trình trên và bạn nhận thấy điều gì? Giải thích thông qua
 việc phân tích mã nguồn.
