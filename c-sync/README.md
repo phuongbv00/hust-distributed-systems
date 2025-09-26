@@ -61,3 +61,13 @@ hơn Coarse Locking.
 
 Câu hỏi 9: chạy chương trình trên và bạn nhận thấy điều gì? Giải thích thông qua
 việc phân tích mã nguồn.
+
+> Chương trình dính deadlock không dừng lại đc, phải force shutdown.
+>
+> Giải thích: `fun_1` và `fun_2` acquire `lock_a` và `lock_b` với thứ tự ngược nhau có thể dẫn đến timeline:
+> - t0: fun_1 acquired lock_a
+> - t1: fun_2 acquired lock_b
+> - t2: fun_1 muốn acquire lock_b nhưng fun_2 đang giữ lock_b, chưa release, fun_1 phải wait
+> - t3: fun_2 muốn acquire lock_a nhưng fun_1 đang giữ lock_a, chưa release, fun_2 phải wait
+> - ...
+> 
