@@ -33,17 +33,22 @@ vấn đề.
 > lock = 1;.
 >
 > Timeline ví dụ:
-> t0: Luồng A thực thi while (lock > 0);. Nó thấy lock bằng 0, vì vậy nó thoát khỏi vòng lặp để chuẩn bị đặt khóa.
-> t1: Ngay tại thời điểm quan trọng này, hệ điều hành tạm dừng Luồng A và chuyển quyền thực thi cho Luồng B. Luồng A
-> chưa kịp chạy dòng lock = 1;.
-> t2: Luồng B cũng thực thi while (lock > 0);. Vì Luồng A chưa làm gì cả, lock vẫn bằng 0. Luồng B cũng thoát khỏi vòng
-> lặp.
-> t3: Luồng B thực thi lock = 1;.
+> - t0: Luồng A thực thi while (lock > 0);. Nó thấy lock bằng 0, vì vậy nó thoát khỏi vòng lặp để chuẩn bị đặt khóa.
+> - t1: Ngay tại thời điểm quan trọng này, hệ điều hành tạm dừng Luồng A và chuyển quyền thực thi cho Luồng B. Luồng A
+    chưa kịp chạy dòng lock = 1;.
+> - t2: Luồng B cũng thực thi while (lock > 0);. Vì Luồng A chưa làm gì cả, lock vẫn bằng 0. Luồng B cũng thoát khỏi
+    vòng lặp.
+> - t3: Luồng B thực thi lock = 1;.
 
 Câu hỏi 7: Bây giờ hãy thay đổi đoạn code của file without-lock.c bằng cách triển
 khai cơ chế mutex lock như trên (bạn có thể tạo file mới và đặt tên khác đi như
 mutex-lock-banking.c). Chạy chương trình nhiều lần và đánh giá đầu ra. Nó có cải
 thiện gì hơn so với naive-lock?
+
+> Mutex lock là một sự cải thiện vượt bậc và đúng đắn so với naive-lock.
+>
+> Việc kiểm tra xem mutex có đang rảnh hay không và việc chiếm giữ mutex nếu nó rảnh là một hành động duy nhất, không
+> thể bị chia nhỏ và không thể bị xen ngang.
 
 Câu hỏi 8: so sánh và đo đạt thời gian để chứng minh là Fine Locking sẽ nhanh
 hơn Coarse Locking.

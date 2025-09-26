@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <pthread.h>
 
-pthread_t mutex;
+pthread_mutex_t mutex;
 
 int shared = 0; //shared variable
 void *incrementer(void *args) {
