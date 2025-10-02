@@ -122,26 +122,25 @@ Câu hỏi 7: Liên quan đến các mô hình nhất quán hướng dữ liệu
 
 a. Giải thích vắn tắt ý tưởng của 2 loại mô hình nhất quán hướng dữ liệu trên.
 
-> Hướng dữ liệu: tập trung vào việc định nghĩa các quy tắc và đảm bảo về trạng thái của dữ liệu được chia sẻ trên nhiều
-> máy chủ bản sao.
+> Hướng dữ liệu: đảm bảo tính hợp lệ và thứ tự của các thao tác đọc/ghi (read/write) trên toàn bộ hệ thống, bất kể người
+> dùng hay tiến trình nào đang truy cập.
 >
-> Hướng người dùng: tập trung vào việc đảm bảo trải nghiệm hợp lý và không gây khó hiểu cho một người dùng, chấp nhận
-> chưa đạt được sự nhất quán toàn cục trong hệ thống.
+> Hướng người dùng: nới lỏng các yêu cầu nhất quán toàn cục và thay vào đó tập trung vào việc đảm bảo trải nghiệm nhất
+> quán cho từng người dùng (client) riêng lẻ.
 
 b. Một công ty startup mới mở chuyên triển khai thương mại hóa dịch vụ CDN (Content Delivery Network) cho 2 loại hình
 dịch vụ là thư điện tử và WWW. Để đảm bảo nhất quán dữ liệu cho 2 loại dịch vụ đó thì tầng middleware sẽ áp dụng mô hình
 nhất quán dữ liệu nào (ở câu a) cho mỗi loại dịch vụ trên?
 
-> Email: causal + client-centric (read-your-writes, monotonic) là hợp lý vì thư mới với người gửi/người nhận cần tiến
-> triển hợp lý theo thời gian, nhưng chấp nhận trễ đồng bộ toàn cầu.
-> WWW tĩnh (nội dung cache): eventual/bounded staleness là đủ; ưu tiên độ trễ thấp và cache hit, cho phép nội dung chậm
-> cập nhật trong giới hạn TTL/SLA.
+> - Email: Nhất quán hướng người dùng, vì đối với email, trải nghiệm của một người dùng cá nhân với hộp thư của
+    chính họ là quan trọng nhất. Người dùng không quan tâm liệu người khác trên thế giới đã thấy email mới của họ hay
+    chưa, nhưng họ yêu cầu hộp thư của mình phải hoạt động một cách logic và hợp lý.
+> - WWW tĩnh: Nhất quán hướng dữ liệu, vì khi một nội dung trên origin server được cập nhật, việc người dùng ở các khu
+    vực khác nhau nhìn thấy phiên bản cũ trong một khoảng thời gian ngắn là hoàn toàn chấp nhận được.
 
-c. Công ty đó triển khai 3000 server bản sao vật lý và chọn hình thức nhân bản dữ liệu dựa trên túc số
+c. Công ty đó triển khai 3000 server bản sao vật lý và chọn hình thức nhân bản dữ liệu dựa trên túc số (quorum) với Nw =
+1600 và Nr = 1100. Vậy hệ thống đó sẽ tránh được xung đột đọc-ghi và xung đột ghi-ghi hay không? Giải thích.
 
-(quorum) với Nw = 1600 và Nr = 1100. Vậy hệ thống đó sẽ tránh được xung đột đọc-ghi và xung đột ghi-
-ghi hay không? Giải thích.
-> Tránh xung đột đọc-ghi: Có, vì Nw + Nr = 2700 > N = 3000? (Điều kiện đúng là Nw + Nr > N). 2700 không > 3000, nên
-> KHÔNG đảm bảo giao cắt; có thể xảy ra đọc-ghi xung đột.
-> Tránh xung đột ghi-ghi: Không, vì cần Nw > N/2 (đa số) để mọi hai tập ghi giao cắt. 1600 > 1500 nên điều kiện ghi-ghi
-> được đảm bảo. Do đó: ghi-ghi an toàn, đọc-ghi không bảo đảm (có thể đọc từ tập không giao cắt với ghi gần nhất).
+> Tránh được xung đột ghi-ghi: (Nw + Nw = 3200) > (N = 3000).
+>
+> Không tránh được xung đột đọc-ghi: (Nw + Nr = 2700) < (N = 3000).
